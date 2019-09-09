@@ -13,6 +13,8 @@ class Lights {
     void moveToLevel(int);
     void changeMagnet(bool);
     void toggleMagnet();
+    void changeBowl(bool);
+    void toggleBowl();
 
   private:
     Logic &_logic;

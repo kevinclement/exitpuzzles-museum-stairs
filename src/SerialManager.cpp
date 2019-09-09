@@ -67,6 +67,10 @@ void SerialManager::handleMessage(String msg) {
     print("toggling magnet...%s", CRLF);
     _logic.lights.toggleMagnet();
   }
+  else if (command == "b") {
+    print("toggling bowl...%s", CRLF);
+    _logic.lights.toggleBowl();
+  }
   else if (command == "d") {
     print("toggling sensor debug...%s", CRLF);
     _logic.stairSensors.debug();

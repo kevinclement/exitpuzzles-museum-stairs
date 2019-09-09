@@ -16,6 +16,7 @@ CRGB right[NUM_LEDS];
 CRGB magnet[NUM_LEDS_MAG];
 
 bool magnetLightOn = false;
+bool bowlOn = false;
 
 Lights::Lights(Logic &logic)
 : _logic(logic)
@@ -26,32 +27,51 @@ void Lights::moveToLevel(int level) {
   int l = level - 1;
   int upperBound = l * 10;
 
+  // SOLVED!
+  if (l >= 7) {
+    upperBound = NUM_LEDS;
+    changeBowl(true);
+    changeMagnet(true);
+  }
+  else {
+    // make sure bowl and maget are reset
+    changeBowl(false);
+    changeMagnet(false);
+  }
+
   // not easy to spread 75 across 7, so even numbers we add 1
   if (l > 0 && l % 2 == 0) {
-      upperBound++;
-  }
-  else if (l == 7) {
-      upperBound = NUM_LEDS;
-
+    upperBound++;
   }
 
   for( int j = 0; j < NUM_LEDS; j++) {
-      CRGB c =  j < upperBound ? CRGB::Green : CRGB::Black;
+    CRGB c =  j < upperBound ? CRGB::Green : CRGB::Black;
 
-      left[j] = c;
-      middle[j] = c;
-      right[j] = c;
+    left[j] = c;
+    middle[j] = c;
+    right[j] = c;
   }
 }
 
 void Lights::toggleMagnet() {
-    changeMagnet(!magnetLightOn);
+  changeMagnet(!magnetLightOn);
 }
 
 void Lights::changeMagnet(bool show) {
   magnetLightOn = show;
   for( int j = 0; j < NUM_LEDS_MAG; j++) {
     magnet[j] = show ? CRGB::White : CRGB::Black;
+  }
+}
+
+void Lights::toggleBowl() {
+  changeBowl(!bowlOn);
+}
+
+void Lights::changeBowl(bool show) {
+  bowlOn = show;
+  for( int j = 75; j < NUM_LEDS_LEFT; j++) {
+    left[j] = show ? CRGB::Blue : CRGB::Black;
   }
 }
 
@@ -69,9 +89,5 @@ void Lights::setup() {
 }
 
 void Lights::handle() {
-//   for( int j = 75; j < NUM_LEDS_LEFT; j++) {
-//     left[j] = CRGB::Green;
-//   }
-
   FastLED.show();
 }
