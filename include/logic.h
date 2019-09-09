@@ -3,7 +3,7 @@
 #include "SerialManager.h"
 #include "AudioPlayer.h"
 #include "Stepper.h"
-#include "Notes.h"
+#include "Lights.h"
 #include "StairSensors.h"
 
 class Logic {
@@ -12,7 +12,7 @@ public:
   SerialManager serial;
   AudioPlayer audio;
   Stepper stepmotor;
-  Notes notes;
+  Lights lights;
   StairSensors stairSensors;
 
   void setup();

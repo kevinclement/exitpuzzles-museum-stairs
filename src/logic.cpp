@@ -7,7 +7,7 @@ Logic::Logic()
   : serial(*this),
     audio(*this),
     stepmotor(*this),
-    notes(*this),
+    lights(*this),
     stairSensors(*this)
 {
 }
@@ -16,7 +16,7 @@ void Logic::setup() {
   serial.setup();
   audio.setup();
   stairSensors.setup();
-  notes.setup();
+  lights.setup();
   stepmotor.setup();
 
   serial.printHelp();
@@ -25,8 +25,8 @@ void Logic::setup() {
 void Logic::handle() {
   serial.handle();
   stairSensors.handle();
-
-  // notes.handle();
+  lights.handle();
+  
   // stepmotor.handle();
   // audio.handle();
 
