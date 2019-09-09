@@ -14,7 +14,7 @@ void Magnet::setup() {
 }
 
 void Magnet::open() {
-  high = true;
+  high = false;
 }
 
 void Magnet::handle() {
