@@ -19,4 +19,5 @@ class Lights {
   private:
     Logic &_logic;
     bool _debug;
+    void breath(uint16_t);
 };

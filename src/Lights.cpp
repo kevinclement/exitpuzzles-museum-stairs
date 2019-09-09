@@ -15,7 +15,12 @@ CRGB right[NUM_LEDS];
 
 CRGB magnet[NUM_LEDS_MAG];
 
+#define MAGNET_DELAY 2000
 bool magnetLightOn = false;
+unsigned long magnet_on_at = 0;
+uint8_t magnet_delta = 0;
+unsigned long previous_breath = 0;
+static bool doneBreathing = false;
 bool bowlOn = false;
 
 Lights::Lights(Logic &logic)
@@ -59,8 +64,13 @@ void Lights::toggleMagnet() {
 
 void Lights::changeMagnet(bool show) {
   magnetLightOn = show;
-  for( int j = 0; j < NUM_LEDS_MAG; j++) {
-    magnet[j] = show ? CRGB::White : CRGB::Black;
+  doneBreathing = false;
+  magnet_on_at = show ? millis() : 0;
+
+  if (!show) {
+    magnet_delta = 0;
+    previous_breath = 0;
+    fill_solid(magnet, NUM_LEDS_MAG, CRGB::Black);
   }
 }
 
@@ -88,6 +98,30 @@ void Lights::setup() {
   FastLED.setBrightness( BRIGHTNESS );
 }
 
+void Lights::breath(uint16_t interval) {
+  const uint8_t min_brightness = 35;
+
+  if ( !doneBreathing && (millis() - previous_breath) > interval ) {
+        previous_breath = millis();
+        uint8_t max_brightness = 220;
+        uint8_t b = scale8(triwave8(magnet_delta), max_brightness-min_brightness)+min_brightness;
+
+        for( int j = 0; j < NUM_LEDS_MAG; j++) {
+          magnet[j] = CHSV(0, 0, b);
+        }
+
+        if (b == max_brightness - 1) {
+          doneBreathing = true;
+        }
+
+        magnet_delta++;
+  }
+}
+
 void Lights::handle() {
+  if (magnet_on_at > 0 && millis() - magnet_on_at > MAGNET_DELAY) {
+    breath(15);
+  }
+
   FastLED.show();
 }
