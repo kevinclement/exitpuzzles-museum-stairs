@@ -15,8 +15,11 @@ public:
   Lights lights;
   StairSensors stairSensors;
 
+  int level = 1;
+
   void setup();
   void handle();
+  void changeLevel();
 
 private:
 };

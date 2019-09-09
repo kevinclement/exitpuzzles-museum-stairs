@@ -31,3 +31,8 @@ void Logic::handle() {
 
   delay(100);
 }
+
+void Logic::changeLevel() {
+  level++;
+  lights.moveToLevel(level);
+}

@@ -67,6 +67,10 @@ void SerialManager::handleMessage(String msg) {
     print("toggling magnet...%s", CRLF);
     _logic.lights.toggleMagnet();
   }
+  if (command == "l") {
+    print("changing level...%s", CRLF);
+    _logic.changeLevel();
+  }
   else if (command == "reset" || command == "r") {
     ESP.restart();
   } else {
