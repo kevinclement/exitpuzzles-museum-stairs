@@ -66,6 +66,7 @@ void SerialManager::handleMessage(String msg) {
   else if (command == "m") {
     print("toggling magnet...%s", CRLF);
     _logic.lights.toggleMagnet();
+    _logic.magnet.open();
   }
   else if (command == "b") {
     print("toggling bowl...%s", CRLF);
