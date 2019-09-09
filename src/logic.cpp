@@ -3,7 +3,8 @@
 #include "logic.h"
 #include "consts.h"
 
-#define STAIR_THRESH 100
+#define STAIR_GOOD_THRESH 100
+#define STAIR_BAD_THRESH 400
 
 bool _solved = false;
 
@@ -35,21 +36,21 @@ void Logic::handle() {
 
   if (_solved) {
     // TMP: allow reset by standing on top two steps
-    if (stairSensors.bad_value > 400 && stairSensors.sensor_values[6] > STAIR_THRESH) {
+    if (stairSensors.bad_value > STAIR_BAD_THRESH && stairSensors.sensor_values[6] > STAIR_GOOD_THRESH) {
       Serial.println("DEBUG: RESETTING");
       _solved = false;
     }
     return;
   }
 
-  if (stairSensors.bad_value > 400 && level != 1) {
+  if (stairSensors.bad_value > STAIR_BAD_THRESH && level != 1) {
     Serial.printf("FAILED RESETTING - level is %d bad: %d\r\n", level, stairSensors.bad_value);
     changeLevel(1);
   }
 
-  if (stairSensors.sensor_values[level - 1] > STAIR_THRESH) {
+  if (stairSensors.sensor_values[level - 1] > STAIR_GOOD_THRESH) {
     Serial.printf("Passed level %d\r\n", level);
-    changeLevel(level + 1);
+    incrementLevel();
 
     if (level == 8) { 
       solved();
