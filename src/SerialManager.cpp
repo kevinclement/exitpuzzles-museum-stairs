@@ -75,6 +75,10 @@ void SerialManager::handleMessage(String msg) {
     print("toggling sensor debug...%s", CRLF);
     _logic.stairSensors.debug();
   }
+  else if (command == "a") {
+    print("playing audio...%s", CRLF);
+    _logic.audio.levelUp();
+  }
   else if (command == "l") {
     print("changing level...%s", CRLF);
     _logic.incrementLevel();
