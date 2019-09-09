@@ -19,7 +19,8 @@ public:
 
   void setup();
   void handle();
-  void changeLevel();
+  void incrementLevel();
+  void changeLevel(int);
 
 private:
 };

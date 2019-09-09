@@ -69,7 +69,11 @@ void SerialManager::handleMessage(String msg) {
   }
   if (command == "l") {
     print("changing level...%s", CRLF);
-    _logic.changeLevel();
+    _logic.incrementLevel();
+  }
+  if (command == "x") {
+    print("resetting to level 1...%s", CRLF);
+    _logic.lights.moveToLevel(1);
   }
   else if (command == "reset" || command == "r") {
     ESP.restart();

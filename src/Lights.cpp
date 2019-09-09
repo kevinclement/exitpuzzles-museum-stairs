@@ -24,11 +24,12 @@ Lights::Lights(Logic &logic)
 
 void Lights::moveToLevel(int level) {
 
-  int upperBound = level * 10; // TODO: more precise
-  for( int j = 0; j < upperBound; j++) {
-      left[j] = CRGB::Green;
-      middle[j] = CRGB::Green;
-      right[j] = CRGB::Green;
+  int upperBound = (level - 1) * 10; // TODO: more precise
+  for( int j = 0; j < NUM_LEDS; j++) {
+      CRGB c =  j < upperBound ? CRGB::Green : CRGB::Black;
+      left[j] = c;
+      middle[j] = c;
+      right[j] = c;
   }
 }
 
@@ -60,7 +61,6 @@ void Lights::handle() {
 //   for( int j = 75; j < NUM_LEDS_LEFT; j++) {
 //     left[j] = CRGB::Green;
 //   }
-
 
   FastLED.show();
 }
