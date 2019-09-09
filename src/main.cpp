@@ -10,4 +10,5 @@ void setup() {
 
 void loop() {
   logic.handle();
+  delay(100);
 }
