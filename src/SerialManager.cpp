@@ -79,6 +79,10 @@ void SerialManager::handleMessage(String msg) {
     print("playing audio...%s", CRLF);
     _logic.audio.levelUp();
   }
+  else if (command == "s") {
+    print("stoping audio...%s", CRLF);
+    _logic.audio.stop();
+  }
   else if (command == "l") {
     print("changing level...%s", CRLF);
     _logic.incrementLevel();
