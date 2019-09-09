@@ -47,9 +47,6 @@ void sendCommand2(byte command, byte dat1, byte dat2)
   {
     mySerial.write(Send_buf[i]) ;
   }
-
-  // TODO: test removal of this
-  delay(500);  // Wait between sending commands.
 }
 
 void play(byte track)
