@@ -35,11 +35,6 @@ void Logic::handle() {
   audio.handle();
 
   if (_solved) {
-    // TMP: allow reset by standing on top two steps
-    if (stairSensors.bad_value > STAIR_BAD_THRESH && stairSensors.sensor_values[6] > STAIR_GOOD_THRESH) {
-      Serial.println("DEBUG: RESETTING");
-      _solved = false;
-    }
     return;
   }
 
