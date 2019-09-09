@@ -21,4 +21,5 @@ class Lights {
     bool _debug;
     void breath(uint16_t);
     void fire(uint16_t,uint16_t,uint16_t);
+    void bowl();
 };

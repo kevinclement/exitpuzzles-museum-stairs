@@ -4,7 +4,7 @@
 
 #define CHIPSET       WS2811
 #define NUM_LEDS      75
-#define NUM_LEDS_LEFT 170 // TODO: could add 5 more
+#define NUM_LEDS_LEFT 174
 #define NUM_LEDS_MAG  13
 
 #define BRIGHTNESS  80
@@ -105,8 +105,10 @@ void Lights::toggleBowl() {
 
 void Lights::changeBowl(bool show) {
   bowlOn = show;
-  for( int j = 75; j < NUM_LEDS_LEFT; j++) {
-    left[j] = show ? CRGB::Red : CRGB::Black;
+  if (!show) {
+    for( int j = 75; j < NUM_LEDS_LEFT; j++) {
+      left[j] = CRGB::Black;
+    }
   }
 }
 
@@ -143,6 +145,18 @@ void Lights::breath(uint16_t interval) {
   }
 }
 
+void Lights::bowl() {
+  static CRGBPalette16 currentPalette = CRGBPalette16(CRGB::Black, CRGB::Red, CRGB::Orange);
+  static uint8_t startIndex = 0;
+  startIndex = startIndex + 2; /* motion speed */
+
+  uint8_t colorIndex = startIndex;
+  for( int i = NUM_LEDS; i < NUM_LEDS_LEFT; i++) {
+    left[i] = ColorFromPalette(currentPalette, colorIndex, 255, LINEARBLEND);
+    colorIndex += 3;
+  }
+}
+
 void Lights::handle() {
   random16_add_entropy(esp_random());
 
@@ -151,6 +165,10 @@ void Lights::handle() {
   }
 
   fire(flame_height, 55, 120);
+  
+  if (bowlOn) {
+    bowl();
+  }
 
   FastLED.show();
   FastLED.delay(1000 / 60);
