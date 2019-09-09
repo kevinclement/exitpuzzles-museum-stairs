@@ -68,6 +68,10 @@ void SerialManager::handleMessage(String msg) {
     _logic.lights.toggleMagnet();
     _logic.magnet.open();
   }
+  else if (command == "v") {
+    print("TMP: adjusting volume..%s", CRLF);
+    _logic.audio.solved();
+  }
   else if (command == "b") {
     print("toggling bowl...%s", CRLF);
     _logic.lights.toggleBowl();

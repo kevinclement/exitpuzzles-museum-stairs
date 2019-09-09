@@ -57,6 +57,7 @@ void Logic::solved() {
   Serial.println("SOLVED!");
   _solved = true;
   magnet.open();
+  audio.solved();
 }
 
 void Logic::incrementLevel() {

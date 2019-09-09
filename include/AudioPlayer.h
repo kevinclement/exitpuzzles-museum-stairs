@@ -13,6 +13,7 @@ class AudioPlayer {
     void idle();
     void levelUp();
     void stop();
+    void solved();
 
   private:
     Logic &_logic;
