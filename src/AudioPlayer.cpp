@@ -25,7 +25,7 @@ void AudioPlayer::setup() {
   delay(200);
 
   // set volume to 60%
-  sendCommand(06, 0x3C);
+  sendCommand(06, 0x32);
 }
 
 void sendCommand(byte command) {
