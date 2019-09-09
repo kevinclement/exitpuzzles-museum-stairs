@@ -31,7 +31,7 @@ void Logic::handle() {
   stairSensors.handle();
   lights.handle();
   magnet.handle();
-  // audio.handle();
+  audio.handle();
 
   if (_solved) {
     // TMP: allow reset by standing on top two steps
@@ -67,4 +67,5 @@ void Logic::incrementLevel() {
 void Logic::changeLevel(int newLevel) {
   level = newLevel;
   lights.moveToLevel(level);
+  audio.levelUp();
 }
