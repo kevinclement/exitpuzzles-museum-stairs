@@ -15,7 +15,7 @@ CRGB right[NUM_LEDS];
 
 CRGB magnet[NUM_LEDS_MAG];
 
-#define MAGNET_DELAY 2000
+#define MAGNET_DELAY 700
 bool magnetLightOn = false;
 unsigned long magnet_on_at = 0;
 uint8_t magnet_delta = 0;
