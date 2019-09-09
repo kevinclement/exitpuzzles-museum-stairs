@@ -10,10 +10,13 @@ StairSensors::StairSensors(Logic &logic)
 }
 
 void StairSensors::setup() {
-
 }
 
-void StairSensors::debugSensors() {
+void StairSensors::debug() {
+  _debug = !_debug;
+}
+
+void StairSensors::printSensors() {
   for (int i=0; i < 7; i++) {
     Serial.printf("%d: %4d ", i+1, sensor_values[i]);
   }
@@ -26,5 +29,7 @@ void StairSensors::handle() {
     sensor_values[i] = analogRead(sensor_pins[i]);
   }
 
-  // debugSensors();
+  if (_debug) {
+    printSensors();
+  }
 }

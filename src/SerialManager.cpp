@@ -63,15 +63,19 @@ void SerialManager::handleMessage(String msg) {
     print("enabling device to drop now...%s", CRLF);
     //ENABLED = true;
   }
-  if (command == "m") {
+  else if (command == "m") {
     print("toggling magnet...%s", CRLF);
     _logic.lights.toggleMagnet();
   }
-  if (command == "l") {
+  else if (command == "d") {
+    print("toggling sensor debug...%s", CRLF);
+    _logic.stairSensors.debug();
+  }
+  else if (command == "l") {
     print("changing level...%s", CRLF);
     _logic.incrementLevel();
   }
-  if (command == "x") {
+  else if (command == "x") {
     print("resetting to level 1...%s", CRLF);
     _logic.lights.moveToLevel(1);
   }

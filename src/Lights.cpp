@@ -23,10 +23,21 @@ Lights::Lights(Logic &logic)
 }
 
 void Lights::moveToLevel(int level) {
+  int l = level - 1;
+  int upperBound = l * 10;
 
-  int upperBound = (level - 1) * 10; // TODO: more precise
+  // not easy to spread 75 across 7, so even numbers we add 1
+  if (l > 0 && l % 2 == 0) {
+      upperBound++;
+  }
+  else if (l == 7) {
+      upperBound = NUM_LEDS;
+
+  }
+
   for( int j = 0; j < NUM_LEDS; j++) {
       CRGB c =  j < upperBound ? CRGB::Green : CRGB::Black;
+
       left[j] = c;
       middle[j] = c;
       right[j] = c;
