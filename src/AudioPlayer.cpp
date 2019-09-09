@@ -2,12 +2,14 @@
 #include "AudioPlayer.h"
 HardwareSerial mySerial(1);
 
-#define CMD_SEL_DEV 0X09
-#define DEV_TF 0X02
+#define WHOSH_TRACK_LENGTH 2700
 
 void sendCommand(byte command);
 void sendCommand(byte command, byte dat2);
 void sendCommand(byte command, byte dat1, byte dat2);
+
+unsigned long playing_song_at = 0;
+
 
 AudioPlayer::AudioPlayer(Logic &logic)
 : _logic(logic)
@@ -18,8 +20,8 @@ void AudioPlayer::setup() {
   // RX: 14 TX: 42
   mySerial.begin(9600, SERIAL_8N1, 14, 32);
 
-  delay(500);//Wait chip initialization is complete
-  sendCommand(CMD_SEL_DEV, DEV_TF);//select the TF card
+  delay(500); // Wait chip initialization is complete
+  sendCommand(0X09, 0X02); // select the TF card
   delay(200);
 
   // set volume to 60%
@@ -55,13 +57,11 @@ void sendCommand(byte command, byte dat1, byte dat2)
   }
 }
 
-void play(byte track)
-{
+void play(byte track) {
   sendCommand(0X08, track);
 }
 
-void playOnce(byte track)
-{
+void playOnce(byte track) {
   sendCommand(0X03, track);
 }
 
@@ -70,16 +70,19 @@ void AudioPlayer::idle() {
 }
 
 void AudioPlayer::levelUp() {
-  Serial.println("advancing");
+  playing_song_at = millis();
   playOnce(3);
-  delay(2700);
-  Serial.println("looping back");
-  play(1);
 }
 
 void AudioPlayer::stop() {
   sendCommand(0x16, 0x00);
+  playing_song_at = 0;
 }
 
 void AudioPlayer::handle() {
+  if (playing_song_at > 0 && millis() - playing_song_at > WHOSH_TRACK_LENGTH) {
+    Serial.println("Audio: levelup played.  restarting idle.");
+    playing_song_at = 0;
+    idle();
+  }
 }
