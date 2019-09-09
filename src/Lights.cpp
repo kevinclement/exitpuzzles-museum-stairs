@@ -22,6 +22,9 @@ uint8_t magnet_delta = 0;
 unsigned long previous_breath = 0;
 static bool doneBreathing = false;
 bool bowlOn = false;
+uint8_t flame_height = 0;
+
+CRGBPalette16 gPal;
 
 Lights::Lights(Logic &logic)
 : _logic(logic)
@@ -30,11 +33,11 @@ Lights::Lights(Logic &logic)
 
 void Lights::moveToLevel(int level) {
   int l = level - 1;
-  int upperBound = l * 10;
+  flame_height = l * 10;
 
   // SOLVED!
   if (l >= 7) {
-    upperBound = NUM_LEDS;
+    flame_height = NUM_LEDS;
     changeBowl(true);
     changeMagnet(true);
   }
@@ -46,17 +49,41 @@ void Lights::moveToLevel(int level) {
 
   // not easy to spread 75 across 7, so even numbers we add 1
   if (l > 0 && l % 2 == 0) {
-    upperBound++;
-  }
-
-  for( int j = 0; j < NUM_LEDS; j++) {
-    CRGB c =  j < upperBound ? CRGB::Green : CRGB::Black;
-
-    left[j] = c;
-    middle[j] = c;
-    right[j] = c;
+    flame_height++;
   }
 }
+
+void Lights::fire(uint16_t top, uint16_t cl, uint16_t sp)
+{  
+    // Array of temperature readings at each simulation cell
+    static byte heat[NUM_LEDS];
+
+    // Step 1.  Cool down every cell a little
+    for( int i = 0; i < top; i++) {
+      heat[i] = qsub8(heat[i],  random8(0, ((cl * 10) / top) + 2));
+    }
+
+    // Step 2.  Heat from each cell drifts 'up' and diffuses a little
+    for( int k= top - 1; k >= 2; k--) {
+      heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
+    }
+
+    // Step 3.  Randomly ignite new 'sparks' of heat near the bottom
+    if(random8() < sp) {
+      int y = random8(7);
+      heat[y] = qadd8(heat[y], random8(160,255) );
+    }
+
+   // Step 4.  Map from heat cells to LED colors
+    for(int j = 0; j < top; j++) {
+      byte colorindex = scale8(heat[j], 240);
+      CRGB color = ColorFromPalette(gPal, colorindex);
+      left[j] = color;
+      middle[j] = color;
+      right[j] = color;
+    }
+}
+
 
 void Lights::toggleMagnet() {
   changeMagnet(!magnetLightOn);
@@ -81,7 +108,7 @@ void Lights::toggleBowl() {
 void Lights::changeBowl(bool show) {
   bowlOn = show;
   for( int j = 75; j < NUM_LEDS_LEFT; j++) {
-    left[j] = show ? CRGB::Blue : CRGB::Black;
+    left[j] = show ? CRGB::Red : CRGB::Black;
   }
 }
 
@@ -89,13 +116,14 @@ void Lights::setup() {
   // 22 = left
   // 23 = middle
   // 21 = right
-  FastLED.addLeds<CHIPSET, 22, GRB>(left, NUM_LEDS_LEFT).setCorrection( TypicalLEDStrip );;
+  FastLED.addLeds<CHIPSET, 22, GRB>(left, NUM_LEDS_LEFT).setCorrection( TypicalLEDStrip );
   FastLED.addLeds<CHIPSET, 23, GRB>(middle, NUM_LEDS).setCorrection( TypicalLEDStrip );
   FastLED.addLeds<CHIPSET, 21, GRB>(right, NUM_LEDS).setCorrection( TypicalLEDStrip );
 
   FastLED.addLeds<CHIPSET, 17, GRB>(magnet, NUM_LEDS_MAG).setCorrection( TypicalLEDStrip );
   
   FastLED.setBrightness( BRIGHTNESS );
+  gPal = HeatColors_p; // TODO: dont put in  var
 }
 
 void Lights::breath(uint16_t interval) {
@@ -119,9 +147,14 @@ void Lights::breath(uint16_t interval) {
 }
 
 void Lights::handle() {
+  random16_add_entropy(esp_random());
+
   if (magnet_on_at > 0 && millis() - magnet_on_at > MAGNET_DELAY) {
     breath(15);
   }
 
+  fire(flame_height, 55, 120);
+
   FastLED.show();
+  FastLED.delay(1000 / 60);
 }
