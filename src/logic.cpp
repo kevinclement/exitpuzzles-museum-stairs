@@ -54,10 +54,15 @@ void Logic::handle() {
     changeLevel(level + 1);
 
     if (level == 8) { 
-      Serial.println("SOLVED!");
-      _solved = true;
+      solved();
     }
   }
+}
+
+void Logic::solved() {
+  Serial.println("SOLVED!");
+  _solved = true;
+  magnet.open();
 }
 
 void Logic::incrementLevel() {

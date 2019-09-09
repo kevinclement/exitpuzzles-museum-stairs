@@ -23,5 +23,6 @@ public:
   void changeLevel(int);
 
 private:
+  void solved();
 };
 
