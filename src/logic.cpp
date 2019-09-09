@@ -32,13 +32,15 @@ void Logic::handle() {
   // audio.handle();
 
   if (stairSensors.bad_value > STAIR_THRESH && level != 1) {
-    Serial.println("FAILED RESETTING");
+    Serial.printf("FAILED RESETTING - level is %d\r\n", level);
     changeLevel(1);
   }
 
-  if (level == 1 && stairSensors.sensor_values[0] > STAIR_THRESH) {
-    Serial.println("Passed level 1");
-    changeLevel(2);
+  // TODO: what should we do if they walk backwards on valid steps?
+  
+  if (stairSensors.sensor_values[level - 1] > STAIR_THRESH) {
+    Serial.printf("Passed level %d\r\n", level);
+    changeLevel(level + 1);
   }
 
   delay(100);
