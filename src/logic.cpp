@@ -30,10 +30,5 @@ void Logic::handle() {
   // stepmotor.handle();
   // audio.handle();
 
-  for (int i=0; i < 7; i++) {
-    Serial.printf("%d: %4d ", i+1, stairSensors.sensor_values[i]);
-  }
-  Serial.printf("BAD: %4d\r\n", stairSensors.bad_value);
-
   delay(100);
 }

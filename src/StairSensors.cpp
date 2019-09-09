@@ -13,9 +13,18 @@ void StairSensors::setup() {
 
 }
 
+void StairSensors::debugSensors() {
+  for (int i=0; i < 7; i++) {
+    Serial.printf("%d: %4d ", i+1, sensor_values[i]);
+  }
+  Serial.printf("BAD: %4d\r\n", bad_value);
+}
+
 void StairSensors::handle() {
   bad_value = analogRead(bad_pin);
   for (int i=0; i < NUM_SENSORS; i++) {
     sensor_values[i] = analogRead(sensor_pins[i]);
   }
+
+  // debugSensors();
 }
