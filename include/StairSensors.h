@@ -4,13 +4,11 @@
 
 class Logic;
 
-class LightSensor {
+class StairSensors {
   public:
-    LightSensor(Logic &logic);
+    StairSensors(Logic &logic);
     void setup();
     void handle();
-
-    bool lightDetected = true;
 
   private:
     Logic &_logic;

@@ -4,7 +4,7 @@
 #include "AudioPlayer.h"
 #include "Stepper.h"
 #include "Notes.h"
-#include "LightSensor.h"
+#include "StairSensors.h"
 
 class Logic {
 public:
@@ -13,7 +13,7 @@ public:
   AudioPlayer audio;
   Stepper stepmotor;
   Notes notes;
-  LightSensor lightsensor;
+  StairSensors stairSensors;
 
   void setup();
   void handle();

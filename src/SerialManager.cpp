@@ -1,9 +1,6 @@
   #include "Arduino.h"
 #include "consts.h"
 #include "Logic.h"
-#include "BluetoothSerial.h"
-
-BluetoothSerial SerialBT;
 
 SerialManager::SerialManager(Logic &logic)
 : _logic(logic)
@@ -12,15 +9,12 @@ SerialManager::SerialManager(Logic &logic)
 
 void SerialManager::setup() {
   Serial.begin(115200);
-  Serial.printf("Museum Birdcage by kevinc...\n");
+  Serial.printf("Museum Stairs by kevinc...\n");
 
   // set read timeout to something really low so we don't hang
   Serial.setTimeout(10);
 
   while (!Serial); // Wait untilSerial is ready 
-
-  // Bluetooth device name
-  SerialBT.begin("ExitMuseumBirdcage");
 }
 
 void SerialManager::print(const char *fmt, ...) {
@@ -32,27 +26,11 @@ void SerialManager::print(const char *fmt, ...) {
 
     // print to serial
     Serial.print(buf);
-
-    // print to bluetooth if available
-    SerialBT.print(buf);
 }
 
 void SerialManager::handle() {
-    // read bluetooth messages
-    readAnyBluetoothMessage();
-
     // read serial messages
     readAnySerialMessage();
-}
-
-void SerialManager::readAnyBluetoothMessage() {
-  if (!SerialBT.available()) {
-    return;
-  }
-
-  // read and handle message from bluetooth
-  String str = SerialBT.readStringUntil('\n');
-  handleMessage(str);
 }
 
 void SerialManager::readAnySerialMessage() {
@@ -75,7 +53,7 @@ void SerialManager::handleMessage(String msg) {
 
   // check if we need to split on space for advance commands
   for (int i = 0; i <= msg.length(); i++) {
-      if (msg.charAt(i) == ' ') {         
+      if (msg.charAt(i) == ' ') {
           command = msg.substring(0, i);
           value = msg.substring(i+1, msg.length()).toInt();
       }
@@ -84,35 +62,6 @@ void SerialManager::handleMessage(String msg) {
   if (command == "enable") {
     print("enabling device to drop now...%s", CRLF);
     //ENABLED = true;
-  }
-  else if (command == "disable") {
-    print("disabling device now...%s", CRLF);
-    //ENABLED = false;
-  }
-  else if (command == "open" || command == "o") {
-    print("opening device now...%s", CRLF);
-    _logic.open();
-  }
-  else if (command == "close" || command == "c") {
-    print("closing device now...%s", CRLF);
-    _logic.close();
-  }
-  else if (command == "b") {
-    print("back now...%s", CRLF);
-    _logic.stepmotor.back();
-  }
-  else if (command == "f") {
-    print("back now...%s", CRLF);
-    _logic.stepmotor.forward();
-  }
-  else if (command == "threshold") {
-    print("setting threshold to '%d'...%s", value, CRLF);
-    // LIGHT_THRESHOLD = value;
-    // EEPROM.put(LIGHT_THRESHOLD_ADDR, value);
-    // EEPROM.commit();    
-  }
-  else if (command == "status") {
-    //printVariables();
   }
   else if (command == "reset" || command == "r") {
     ESP.restart();
