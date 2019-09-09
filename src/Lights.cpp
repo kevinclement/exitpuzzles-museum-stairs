@@ -26,7 +26,7 @@ void Lights::moveToLevel(int level) {
 
 }
 
-void Lights::toggleMagnetm() {
+void Lights::toggleMagnet() {
     changeMagnet(!magnetLightOn);
 }
 
