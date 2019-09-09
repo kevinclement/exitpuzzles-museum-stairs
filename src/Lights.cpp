@@ -2,13 +2,12 @@
 #include "Lights.h"
 #include <FastLED.h>
 
-#define CHIPSET      WS2811
-#define NUM_LEDS     75
-#define NUM_LEDS_LEFT 170
-#define NUM_LEDS_MAG 13
+#define CHIPSET       WS2811
+#define NUM_LEDS      75
+#define NUM_LEDS_LEFT 170 // TODO: could add 5 more
+#define NUM_LEDS_MAG  13
 
 #define BRIGHTNESS  80
-#define FRAMES_PER_SECOND 60
 
 CRGB left[NUM_LEDS_LEFT];
 CRGB middle[NUM_LEDS];
@@ -16,9 +15,26 @@ CRGB right[NUM_LEDS];
 
 CRGB magnet[NUM_LEDS_MAG];
 
+bool magnetLightOn = false;
+
 Lights::Lights(Logic &logic)
 : _logic(logic)
 {  
+}
+
+void Lights::moveToLevel(int level) {
+
+}
+
+void Lights::toggleMagnetm() {
+    changeMagnet(!magnetLightOn);
+}
+
+void Lights::changeMagnet(bool show) {
+  magnetLightOn = show;
+  for( int j = 0; j < NUM_LEDS_MAG; j++) {
+    magnet[j] = show ? CRGB::White : CRGB::Black;
+  }
 }
 
 void Lights::setup() {
@@ -46,10 +62,6 @@ void Lights::handle() {
   for( int j = 0; j < NUM_LEDS; j++) {
       middle[j] = CRGB::Green;
       right[j] = CRGB::Green;
-  }
-
-  for( int j = 0; j < NUM_LEDS_MAG; j++) {
-    magnet[j] = CRGB::White;
   }
 
   FastLED.show();

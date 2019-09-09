@@ -10,6 +10,10 @@ class Lights {
     void setup();
     void handle();
 
+    void moveToLevel(int);
+    void changeMagnet(bool);
+    void toggleMagnet();
+
   private:
     Logic &_logic;
 };

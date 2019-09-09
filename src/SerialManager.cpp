@@ -63,6 +63,10 @@ void SerialManager::handleMessage(String msg) {
     print("enabling device to drop now...%s", CRLF);
     //ENABLED = true;
   }
+  if (command == "m") {
+    print("toggling magnet...%s", CRLF);
+    _logic.lights.toggleMagnet();
+  }
   else if (command == "reset" || command == "r") {
     ESP.restart();
   } else {
