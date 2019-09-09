@@ -47,8 +47,6 @@ void Logic::handle() {
     changeLevel(1);
   }
 
-  // TODO: what should we do if they walk backwards on valid steps?
-
   if (stairSensors.sensor_values[level - 1] > STAIR_THRESH) {
     Serial.printf("Passed level %d\r\n", level);
     changeLevel(level + 1);
