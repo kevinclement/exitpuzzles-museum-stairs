@@ -24,8 +24,6 @@ static bool doneBreathing = false;
 bool bowlOn = false;
 uint8_t flame_height = 0;
 
-CRGBPalette16 gPal;
-
 Lights::Lights(Logic &logic)
 : _logic(logic)
 {  
@@ -77,7 +75,7 @@ void Lights::fire(uint16_t top, uint16_t cl, uint16_t sp)
    // Step 4.  Map from heat cells to LED colors
     for(int j = 0; j < top; j++) {
       byte colorindex = scale8(heat[j], 240);
-      CRGB color = ColorFromPalette(gPal, colorindex);
+      CRGB color = ColorFromPalette(HeatColors_p, colorindex);
       left[j] = color;
       middle[j] = color;
       right[j] = color;
@@ -123,7 +121,6 @@ void Lights::setup() {
   FastLED.addLeds<CHIPSET, 17, GRB>(magnet, NUM_LEDS_MAG).setCorrection( TypicalLEDStrip );
   
   FastLED.setBrightness( BRIGHTNESS );
-  gPal = HeatColors_p; // TODO: dont put in  var
 }
 
 void Lights::breath(uint16_t interval) {
