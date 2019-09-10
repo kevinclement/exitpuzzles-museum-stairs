@@ -3,13 +3,16 @@
 HardwareSerial mySerial(1);
 
 #define WHOSH_TRACK_LENGTH 2700
+#define VOLUME_LOW 0x16   // 22%
+#define VOLUME_HIGH 0x1C  // 28%
+#define VOLUME_WHOSH 0x1E // 30%
 
 void sendCommand(byte command);
 void sendCommand(byte command, byte dat2);
 void sendCommand(byte command, byte dat1, byte dat2);
+void play(byte track);
 
-unsigned long playing_song_at = 0;
-
+unsigned long playing_at = 0;
 
 AudioPlayer::AudioPlayer(Logic &logic)
 : _logic(logic)
@@ -24,8 +27,10 @@ void AudioPlayer::setup() {
   sendCommand(0X09, 0X02); // select the TF card
   delay(200);
 
-  // set volume to 60%
-  sendCommand(06, 0x32);
+  // set initial volume to low
+  sendCommand(06, VOLUME_LOW);
+  delay(20);
+  play(1);
 }
 
 void sendCommand(byte command) {
@@ -66,23 +71,32 @@ void playOnce(byte track) {
 }
 
 void AudioPlayer::idle() {
+  sendCommand(06, VOLUME_HIGH);
+  delay(20);
   play(1);
 }
 
 void AudioPlayer::levelUp() {
-  playing_song_at = millis();
-  playOnce(3);
+  playing_at = millis();
+
+  // play at whosh volume once
+  sendCommand(0x22, VOLUME_WHOSH, 0x03);
 }
 
 void AudioPlayer::stop() {
   sendCommand(0x16, 0x00);
-  playing_song_at = 0;
+  playing_at = 0;
+}
+
+void AudioPlayer::solved() {
+  Serial.println("audio: solved.  sending command to turn down to low.");
+  sendCommand(06, VOLUME_LOW);
 }
 
 void AudioPlayer::handle() {
-  if (playing_song_at > 0 && millis() - playing_song_at > WHOSH_TRACK_LENGTH) {
-    Serial.println("Audio: levelup played.  restarting idle.");
-    playing_song_at = 0;
+  if (playing_at > 0 && millis() - playing_at > WHOSH_TRACK_LENGTH) {
+    Serial.println("audio: levelup played.  restarting idle.");
+    playing_at = 0;
     idle();
   }
 }
