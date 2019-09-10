@@ -2,7 +2,7 @@
 #include "Lights.h"
 #include <FastLED.h>
 
-#define CHIPSET       WS2811
+#define CHIPSET       WS2812B
 #define NUM_LEDS      75
 #define NUM_LEDS_LEFT 174
 #define NUM_LEDS_MAG  13
