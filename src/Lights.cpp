@@ -7,7 +7,7 @@
 #define NUM_LEDS_LEFT 174
 #define NUM_LEDS_MAG  13
 
-#define BRIGHTNESS  80
+#define BRIGHTNESS  100
 
 CRGB left[NUM_LEDS_LEFT];
 CRGB middle[NUM_LEDS];
