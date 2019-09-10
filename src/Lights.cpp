@@ -99,7 +99,7 @@ void Lights::fire(uint16_t top, uint16_t cl, uint16_t sp)
     }
 
     // Step 2.  Heat from each cell drifts 'up' and diffuses a little
-    for( int k= top - 1; k >= 2; k--) {
+    for( int k = top - 1; k >= 2; k--) {
       hL[k] = (hL[k - 1] + hL[k - 2] + hL[k - 2] ) / 3;
       hM[k] = (hM[k - 1] + hM[k - 2] + hM[k - 2] ) / 3;
       hR[k] = (hR[k - 1] + hR[k - 2] + hR[k - 2] ) / 3;
