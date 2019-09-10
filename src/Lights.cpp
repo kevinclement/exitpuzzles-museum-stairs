@@ -59,38 +59,52 @@ void Lights::moveToLevel(int level) {
 
     _level = level;
   }
-
-  
 }
 
 void Lights::fire(uint16_t top, uint16_t cl, uint16_t sp)
 {  
     // Array of temperature readings at each simulation cell
-    static byte heat[NUM_LEDS];
+    static byte hL[NUM_LEDS];
+    static byte hM[NUM_LEDS];
+    static byte hR[NUM_LEDS];
 
     // Step 1.  Cool down every cell a little
     for( int i = 0; i < top; i++) {
-      heat[i] = qsub8(heat[i],  random8(0, ((cl * 10) / top) + 2));
+      hL[i] = qsub8(hL[i],  random8(0, ((cl * 10) / top) + 2));
+      hM[i] = qsub8(hM[i],  random8(0, ((cl * 10) / top) + 2));
+      hR[i] = qsub8(hR[i],  random8(0, ((cl * 10) / top) + 2));
     }
 
     // Step 2.  Heat from each cell drifts 'up' and diffuses a little
     for( int k= top - 1; k >= 2; k--) {
-      heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
+      hL[k] = (hL[k - 1] + hL[k - 2] + hL[k - 2] ) / 3;
+      hM[k] = (hM[k - 1] + hM[k - 2] + hM[k - 2] ) / 3;
+      hR[k] = (hR[k - 1] + hR[k - 2] + hR[k - 2] ) / 3;
     }
 
     // Step 3.  Randomly ignite new 'sparks' of heat near the bottom
     if(random8() < sp) {
       int y = random8(7);
-      heat[y] = qadd8(heat[y], random8(160,255) );
+      hL[y] = qadd8(hL[y], random8(160,255) );
+    }
+    if(random8() < sp) {
+      int y = random8(7);
+      hM[y] = qadd8(hM[y], random8(160,255) );
+    }
+    if(random8() < sp) {
+      int y = random8(7);
+      hR[y] = qadd8(hR[y], random8(160,255) );
     }
 
    // Step 4.  Map from heat cells to LED colors
     for(int j = 0; j < top; j++) {
-      byte colorindex = scale8(heat[j], 240);
-      CRGB color = ColorFromPalette(HeatColors_p, colorindex);
-      left[j] = color;
-      middle[j] = color;
-      right[j] = color;
+      CRGB cL = ColorFromPalette(HeatColors_p, scale8(hL[j], 240));
+      CRGB cM = ColorFromPalette(HeatColors_p, scale8(hM[j], 240));
+      CRGB cR = ColorFromPalette(HeatColors_p, scale8(hR[j], 240));
+
+      left[j] = cL;
+      middle[j] = cM;
+      right[j] = cR;
     }
 }
 
