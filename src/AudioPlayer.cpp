@@ -71,7 +71,7 @@ void playOnce(byte track) {
 }
 
 void AudioPlayer::idle() {
-  sendCommand(06, VOLUME_HIGH);
+  sendCommand(06, _solved ? VOLUME_LOW : VOLUME_HIGH);
   delay(20);
   play(1);
 }
@@ -89,8 +89,7 @@ void AudioPlayer::stop() {
 }
 
 void AudioPlayer::solved() {
-  Serial.println("audio: solved.  sending command to turn down to low.");
-  sendCommand(06, VOLUME_LOW);
+  _solved = true;
 }
 
 void AudioPlayer::handle() {

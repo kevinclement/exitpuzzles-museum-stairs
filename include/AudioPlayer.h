@@ -17,5 +17,5 @@ class AudioPlayer {
 
   private:
     Logic &_logic;
-
+    bool _solved = false;
 };
