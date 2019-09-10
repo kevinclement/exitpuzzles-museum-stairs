@@ -37,7 +37,8 @@ void Lights::moveToLevel(int level) {
   if (l >= 7) {
     flame_height = NUM_LEDS;
     changeBowl(true);
-    changeMagnet(true);
+
+    // magnet light gets triggered by logic after a wait time
   }
   else {
     // make sure bowl and magnet are reset
