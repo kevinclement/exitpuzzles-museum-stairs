@@ -3,6 +3,9 @@
 HardwareSerial mySerial(1);
 
 #define WHOSH_TRACK_LENGTH 2700
+#define VOLUME_LOW 0x14   // 20%
+#define VOLUME_HIGH 0x28  // 40%
+#define VOLUME_WHOSH 0x32 // 50%
 
 void sendCommand(byte command);
 void sendCommand(byte command, byte dat2);
@@ -24,9 +27,8 @@ void AudioPlayer::setup() {
   sendCommand(0X09, 0X02); // select the TF card
   delay(200);
 
-  // set initial volume to low (16%)
-  //sendCommand(06, 0x10);
-  sendCommand(06, 0x10);
+  // set initial volume to low
+  sendCommand(06, VOLUME_LOW);
 }
 
 void sendCommand(byte command) {
