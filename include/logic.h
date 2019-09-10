@@ -20,7 +20,7 @@ public:
   void setup();
   void handle();
   void incrementLevel();
-  void changeLevel(int);
+  void changeLevel(int, bool);
 
 private:
   void solved();
