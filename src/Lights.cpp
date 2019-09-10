@@ -52,9 +52,9 @@ void Lights::moveToLevel(int level) {
     // means we went down, need to reset
     if (_level > 0 && level < _level) {
       Serial.println("lights: level went down, resetting");
-      fill_solid(left, NUM_LEDS, CRGB::Black);
-      fill_solid(middle, NUM_LEDS, CRGB::Black);
-      fill_solid(right, NUM_LEDS, CRGB::Black);
+      _fade = true;
+    } else {
+      _fade = false;
     }
 
     _level = level;
@@ -63,13 +63,36 @@ void Lights::moveToLevel(int level) {
 
 void Lights::fire(uint16_t top, uint16_t cl, uint16_t sp)
 {  
+    // instead of a strict copy to black when they reset, lets fade it to black
+    if (_fade) {
+      bool allBlack = true;
+      for(int i = 0; i < NUM_LEDS; i++) {
+        if (left[i].r != 0 || left[i].g != 0 || left[i].b != 0 || 
+            middle[i].r != 0 || middle[i].g != 0 || middle[i].b != 0 ||
+            right[i].r != 0 || right[i].g != 0 || right[i].b != 0 )
+        {
+          allBlack = false;
+        }
+        
+        left[i].fadeToBlackBy(64);
+        middle[i].fadeToBlackBy(64);
+        right[i].fadeToBlackBy(64);
+      }
+
+      if (!allBlack){
+        return;
+      } else {
+        _fade = false;
+      }
+    }
+
     // Array of temperature readings at each simulation cell
     static byte hL[NUM_LEDS];
     static byte hM[NUM_LEDS];
     static byte hR[NUM_LEDS];
 
     // Step 1.  Cool down every cell a little
-    for( int i = 0; i < top; i++) {
+    for(int i = 0; i < top; i++) {
       hL[i] = qsub8(hL[i],  random8(0, ((cl * 10) / top) + 2));
       hM[i] = qsub8(hM[i],  random8(0, ((cl * 10) / top) + 2));
       hR[i] = qsub8(hR[i],  random8(0, ((cl * 10) / top) + 2));

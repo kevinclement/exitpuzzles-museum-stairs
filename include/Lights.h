@@ -20,6 +20,7 @@ class Lights {
     Logic &_logic;
     bool _debug;
     uint16_t _level = 0;
+    bool _fade = false;
     void breath(uint16_t);
     void fire(uint16_t,uint16_t,uint16_t);
     void bowl();
