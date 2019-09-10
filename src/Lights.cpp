@@ -40,15 +40,27 @@ void Lights::moveToLevel(int level) {
     changeMagnet(true);
   }
   else {
-    // make sure bowl and maget are reset
+    // make sure bowl and magnet are reset
     changeBowl(false);
     changeMagnet(false);
+
+    // not easy to spread 75 across 7, so even numbers we add 1
+    if (l > 0 && l % 2 == 0) {
+      flame_height++;
+    }
+
+    // means we went down, need to reset
+    if (_level > 0 && level < _level) {
+      Serial.println("lights: level went down, resetting");
+      fill_solid(left, NUM_LEDS, CRGB::Black);
+      fill_solid(middle, NUM_LEDS, CRGB::Black);
+      fill_solid(right, NUM_LEDS, CRGB::Black);
+    }
+
+    _level = level;
   }
 
-  // not easy to spread 75 across 7, so even numbers we add 1
-  if (l > 0 && l % 2 == 0) {
-    flame_height++;
-  }
+  
 }
 
 void Lights::fire(uint16_t top, uint16_t cl, uint16_t sp)
@@ -123,6 +135,9 @@ void Lights::setup() {
   FastLED.addLeds<CHIPSET, 17, GRB>(magnet, NUM_LEDS_MAG).setCorrection( TypicalLEDStrip );
   
   FastLED.setBrightness( BRIGHTNESS );
+
+  // initial state is level 7, high before they start the puzzle
+  moveToLevel(7);
 }
 
 void Lights::breath(uint16_t interval) {
