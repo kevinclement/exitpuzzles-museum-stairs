@@ -3,6 +3,7 @@
 HardwareSerial mySerial(1);
 
 #define WHOSH_TRACK_LENGTH 2700
+#define SOLVED_TRACK_LENGTH 8000
 #define VOLUME_LOW 0x16   // 22%
 #define VOLUME_HIGH 0x1C  // 28%
 #define VOLUME_WHOSH 0x1E // 30%
@@ -12,7 +13,8 @@ void sendCommand(byte command, byte dat2);
 void sendCommand(byte command, byte dat1, byte dat2);
 void play(byte track);
 
-unsigned long playing_at = 0;
+unsigned long whoosh_playing_at = 0;
+unsigned long solved_playing_at = 0;
 
 AudioPlayer::AudioPlayer(Logic &logic)
 : _logic(logic)
@@ -30,7 +32,7 @@ void AudioPlayer::setup() {
   // set initial volume to low
   sendCommand(06, VOLUME_LOW);
   delay(20);
-  play(1);
+  play(6);
 }
 
 void sendCommand(byte command) {
@@ -73,19 +75,20 @@ void playOnce(byte track) {
 void AudioPlayer::idle() {
   sendCommand(06, _solved ? VOLUME_LOW : VOLUME_HIGH);
   delay(20);
-  play(1);
+  play(6);
 }
 
 void AudioPlayer::levelUp() {
-  playing_at = millis();
+  whoosh_playing_at = millis();
 
   // play at whosh volume once
-  sendCommand(0x22, VOLUME_WHOSH, 0x03);
+  sendCommand(0x22, VOLUME_WHOSH, 1);
 }
 
 void AudioPlayer::stop() {
   sendCommand(0x16, 0x00);
-  playing_at = 0;
+  whoosh_playing_at = 0;
+  solved_playing_at = 0;
 }
 
 void AudioPlayer::solved() {
@@ -93,9 +96,14 @@ void AudioPlayer::solved() {
 }
 
 void AudioPlayer::handle() {
-  if (playing_at > 0 && millis() - playing_at > WHOSH_TRACK_LENGTH) {
+  if (whoosh_playing_at > 0 && millis() - whoosh_playing_at > WHOSH_TRACK_LENGTH) {
+    Serial.println("audio: levelup played.  playing solved track.");
+    solved_playing_at = millis();
+    whoosh_playing_at = 0;
+    sendCommand(0x22, VOLUME_WHOSH, 16);
+  } else if (solved_playing_at > 0 && millis() - solved_playing_at > SOLVED_TRACK_LENGTH) {
+    solved_playing_at = 0;
     Serial.println("audio: levelup played.  restarting idle.");
-    playing_at = 0;
     idle();
   }
 }
