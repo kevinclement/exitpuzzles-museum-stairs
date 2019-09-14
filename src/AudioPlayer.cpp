@@ -52,7 +52,7 @@ void sendCommand(byte command, byte dat1, byte dat2)
   Send_buf[1] = 0xFF;    // Version
   Send_buf[2] = 0x06;    // Command length not including Start and End byte.
   Send_buf[3] = command; // Command
-  Send_buf[4] = 0x01;    // Feedback 0x00 NO, 0x01 YES
+  Send_buf[4] = 0x00;    // Feedback 0x00 NO, 0x01 YES
   Send_buf[5] = dat1;    // DATA1 datah
   Send_buf[6] = dat2;    // DATA2 datal
   Send_buf[7] = 0xEF;    // End byte
