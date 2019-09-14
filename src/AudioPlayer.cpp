@@ -3,7 +3,7 @@
 HardwareSerial mySerial(1);
 
 #define WHOSH_TRACK_LENGTH 2700
-#define SOLVED_TRACK_LENGTH 8000
+#define SOLVED_TRACK_LENGTH 10000
 #define VOLUME_LOW 0x16   // 22%
 #define VOLUME_HIGH 0x1C  // 28%
 #define VOLUME_WHOSH 0x1E // 30%
@@ -96,7 +96,12 @@ void AudioPlayer::solved() {
 }
 
 void AudioPlayer::handle() {
-  if (whoosh_playing_at > 0 && millis() - whoosh_playing_at > WHOSH_TRACK_LENGTH) {
+  if (!_solved && whoosh_playing_at > 0 && millis() - whoosh_playing_at > WHOSH_TRACK_LENGTH) {
+    Serial.println("audio: levelup played not solved.  restarting idle.");
+    whoosh_playing_at = 0;
+    idle();
+  }
+  else if (_solved && whoosh_playing_at > 0 && millis() - whoosh_playing_at  > WHOSH_TRACK_LENGTH - 1000) {
     Serial.println("audio: levelup played.  playing solved track.");
     solved_playing_at = millis();
     whoosh_playing_at = 0;
