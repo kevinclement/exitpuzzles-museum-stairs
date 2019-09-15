@@ -117,7 +117,6 @@ void AudioPlayer::handle() {
   }
   else if (idle_playing_at > 0 && millis() - idle_playing_at > IDLE_TRACK_LENGTH) {
     idle_playing_at = 0;
-    Serial.println("audio: idle finished.  restarting.");
     idle();
   }
 }

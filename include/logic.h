@@ -22,8 +22,8 @@ public:
   void status();
   void incrementLevel();
   void changeLevel(int, bool);
+  void solved();
 
 private:
-  void solved();
 };
 

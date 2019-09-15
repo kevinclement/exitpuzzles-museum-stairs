@@ -64,16 +64,21 @@ void Logic::handle() {
 
     if (level == 8) {
       solved();
+    } else {
+      status();
     }
-
-    status();
   }
 }
 
 void Logic::solved() {
   Serial.println("SOLVED!");
+
+  // change level to 8, in case this is a forced solved, otherwise its a noop
+  changeLevel(8, false);
+
   _solved_at = millis();
   audio.solved();
+  status();
 }
 
 void Logic::incrementLevel() {

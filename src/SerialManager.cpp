@@ -62,6 +62,11 @@ void SerialManager::handleMessage(String msg) {
   if (command == "status" || command == "s") {
     _logic.status();
   }
+  else if (command == "drop" || command == "y") {
+    print("forcing drop solved state...%s", CRLF);
+    _logic.solved();
+  }
+
   else if (command == "m") {
     print("toggling magnet...%s", CRLF);
     _logic.lights.toggleMagnet();
