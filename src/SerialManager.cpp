@@ -59,9 +59,8 @@ void SerialManager::handleMessage(String msg) {
       }
   }
  
-  if (command == "enable") {
-    print("enabling device to drop now...%s", CRLF);
-    //ENABLED = true;
+  if (command == "status" || command == "s") {
+    _logic.status();
   }
   else if (command == "m") {
     print("toggling magnet...%s", CRLF);
@@ -84,7 +83,7 @@ void SerialManager::handleMessage(String msg) {
     print("playing audio...%s", CRLF);
     _logic.audio.levelUp();
   }
-  else if (command == "s") {
+  else if (command == "audiostop") {
     print("stoping audio...%s", CRLF);
     _logic.audio.stop();
   }
@@ -96,7 +95,7 @@ void SerialManager::handleMessage(String msg) {
     print("resetting to level 1...%s", CRLF);
     _logic.lights.moveToLevel(1);
   }
-  else if (command == "reset" || command == "r") {
+  else if (command == "reset" || command == "r" || command == "reboot") {
     ESP.restart();
   } else {
     int str_len = command.length() + 1; 

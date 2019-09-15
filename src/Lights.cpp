@@ -16,12 +16,10 @@ CRGB right[NUM_LEDS];
 CRGB magnet[NUM_LEDS_MAG];
 
 #define MAGNET_DELAY 700
-bool magnetLightOn = false;
 unsigned long magnet_on_at = 0;
 uint8_t magnet_delta = 0;
 unsigned long previous_breath = 0;
 static bool doneBreathing = false;
-bool bowlOn = false;
 uint8_t flame_height = 0;
 
 Lights::Lights(Logic &logic)

@@ -10,11 +10,16 @@ class Lights {
     void setup();
     void handle();
 
+    bool magnetLightOn = false;
+    bool bowlOn = false;
+
     void moveToLevel(int);
     void changeMagnet(bool);
     void toggleMagnet();
     void changeBowl(bool);
     void toggleBowl();
+
+    
 
   private:
     Logic &_logic;

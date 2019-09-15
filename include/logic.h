@@ -19,6 +19,7 @@ public:
 
   void setup();
   void handle();
+  void status();
   void incrementLevel();
   void changeLevel(int, bool);
 

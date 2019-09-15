@@ -3,7 +3,6 @@
 
 #define MAGNET_PIN 16
 
-bool high = true;
 Magnet::Magnet(Logic &logic)
 : _logic(logic)
 {  

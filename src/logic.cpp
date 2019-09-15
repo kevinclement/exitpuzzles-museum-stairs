@@ -26,6 +26,7 @@ void Logic::setup() {
   magnet.setup();
 
   serial.printHelp();
+  status();
 }
 
 void Logic::handle() {
@@ -43,6 +44,8 @@ void Logic::handle() {
       magnet.open();
       lights.changeMagnet(true);
       _solvedRan = true;
+
+      status();
     }
 
     return;
@@ -51,6 +54,8 @@ void Logic::handle() {
   if (stairSensors.bad_value > STAIR_BAD_THRESH && level != 1) {
     Serial.printf("FAILED RESETTING - level is %d bad: %d\r\n", level, stairSensors.bad_value);
     changeLevel(1, true);
+
+    status();
   }
 
   if (stairSensors.sensor_values[level - 1] > STAIR_GOOD_THRESH) {
@@ -60,6 +65,8 @@ void Logic::handle() {
     if (level == 8) {
       solved();
     }
+
+    status();
   }
 }
 
@@ -82,4 +89,20 @@ void Logic::changeLevel(int newLevel, bool failure) {
   } else {
     audio.stop();
   }
+}
+
+void Logic::status() {
+  serial.print(
+    "status=level:%d,solved:%s,bowl:%s,magnet:%s,"
+    "magnetLight:%s,volumeLow:%d,volumeHigh:%d,volumeWhosh:%d%s",
+
+    level,
+    _solved_at > 0 ? "true" : "false",
+    lights.bowlOn ? "true" : "false",
+    magnet.high ? "true" : "false",
+    lights.magnetLightOn ? "true" : "false",
+    audio.volume_low,
+    audio.volume_high,
+    audio.volume_whosh,
+    CRLF);
 }

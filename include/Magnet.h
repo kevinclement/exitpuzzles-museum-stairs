@@ -10,6 +10,7 @@ class Magnet {
     void setup();
     void handle();
 
+    bool high = true;
     void open();
 
   private:
