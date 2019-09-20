@@ -18,17 +18,9 @@ Logic::Logic()
 {
 }
 
-void rb(int) {
-
-}
-
 void Logic::setup() {
-  serial.setup(""); // empty name disables bluetooth, otherwise sensors wont work
-
-  serial.registerCommand(SerialCommand("status",  's', (void (*)(int))&Logic::status, "status", "gets the status of device"));
-  serial.registerCommand(SerialCommand("drop",    'y', (void (*)(int))&Logic::solved, "drop",   "forces solved state and opens device"));
-  serial.registerCommand(SerialCommand("reboot",  'r', (void (*)(int))&Logic::reboot, "reboot", "software reboot the device"));
-
+  // empty name disables bluetooth otherwise sensors wont work
+  serial.setup("");
   audio.setup();
   stairSensors.setup();
   lights.setup();
@@ -36,10 +28,6 @@ void Logic::setup() {
 
   serial.printHelp();
   status();
-}
-
-void Logic::reboot(int) {
-  ESP.restart();
 }
 
 void Logic::handle() {
