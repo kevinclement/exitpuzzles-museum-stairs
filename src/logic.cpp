@@ -8,6 +8,7 @@
 #define MAGNET_SOLVED_WAIT_TIME 2800
 
 unsigned long _solved_at = 0;
+bool _unsolvable = false;
 
 Logic::Logic() 
   : serial(),
@@ -52,18 +53,36 @@ void Logic::handle() {
     return;
   }
 
+  bool inc = false;
+  bool reset = false;
+
   if (stairSensors.bad_value > STAIR_BAD_THRESH && level != 1) {
-    Serial.printf("FAILED RESETTING - level is %d bad: %d\r\n", level, stairSensors.bad_value);
-    resetLevel();
+    reset = true;
   }
 
   if (stairSensors.sensor_values[level - 1] > STAIR_GOOD_THRESH) {
+    Serial.printf("sensor thresh l:%d v:%d\r\n", level, stairSensors.sensor_values[level - 1]);
+    inc = true;
+  }
+
+  // if its unsolvable, than randomize increments above level 1
+  if (_unsolvable && inc && level > 1) {
+    inc = random(2) == 0;
+    reset = !inc;
+  }
+
+  if (inc) {
     Serial.printf("Passed level %d\r\n", level);
     incrementLevel();
 
-    if (level == 8) {
+    if (_unsolvable && level == 7) {
+      resetLevel();
+    } else if (!_unsolvable && level == 8) {
       solved();
     }
+  } else if (reset) {
+    Serial.printf("FAILED RESETTING - level is %d bad: %d\r\n", level, stairSensors.bad_value);
+    resetLevel();
   }
 }
 
@@ -85,6 +104,11 @@ void Logic::resetLevel() {
   changeLevel(1, true);
 }
 
+void Logic::unsolvable() {
+  _unsolvable = !_unsolvable;
+  status();
+}
+
 void Logic::changeLevel(int newLevel, bool failure) {
   level = newLevel;
   lights.moveToLevel(level);
@@ -101,8 +125,9 @@ void Logic::changeLevel(int newLevel, bool failure) {
 void Logic::status() {
   serial.print(
     "status=level:%d,solved:%s,bowl:%s,magnet:%s,"
-    "magnetLight:%s,volumeLow:%d,volumeHigh:%d,volumeWhosh:%d%s",
-
+    "magnetLight:%s,volumeLow:%d,volumeHigh:%d,volumeWhosh:%d,"
+    "unsolvable:%s"
+    "%s",
     level,
     _solved_at > 0 ? "true" : "false",
     lights.bowlOn ? "true" : "false",
@@ -111,5 +136,6 @@ void Logic::status() {
     audio.volume_low,
     audio.volume_high,
     audio.volume_whosh,
+    _unsolvable ? "true" : "false",
     CRLF);
 }

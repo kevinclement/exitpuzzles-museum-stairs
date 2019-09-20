@@ -22,6 +22,7 @@ public:
   void status();
   void incrementLevel();
   void resetLevel();
+  void unsolvable();
   void changeLevel(int, bool);
   void solved();
 
