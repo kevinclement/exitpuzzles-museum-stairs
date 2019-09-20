@@ -10,7 +10,7 @@
 unsigned long _solved_at = 0;
 
 Logic::Logic() 
-  : serial(*this),
+  : serial(),
     audio(*this),
     magnet(*this),
     lights(*this),
@@ -18,8 +18,17 @@ Logic::Logic()
 {
 }
 
+void rb(int) {
+
+}
+
 void Logic::setup() {
-  serial.setup();
+  serial.setup(""); // empty name disables bluetooth, otherwise sensors wont work
+
+  serial.registerCommand(SerialCommand("status",  's', (void (*)(int))&Logic::status, "status", "gets the status of device"));
+  serial.registerCommand(SerialCommand("drop",    'y', (void (*)(int))&Logic::solved, "drop",   "forces solved state and opens device"));
+  serial.registerCommand(SerialCommand("reboot",  'r', (void (*)(int))&Logic::reboot, "reboot", "software reboot the device"));
+
   audio.setup();
   stairSensors.setup();
   lights.setup();
@@ -27,6 +36,10 @@ void Logic::setup() {
 
   serial.printHelp();
   status();
+}
+
+void Logic::reboot(int) {
+  ESP.restart();
 }
 
 void Logic::handle() {
@@ -111,3 +124,33 @@ void Logic::status() {
     audio.volume_whosh,
     CRLF);
 }
+
+// PREVIOUS COMMANDS ---------------------------
+// ---------------------------------------------
+
+  // else if (command == "m") {
+  //   print("toggling magnet...%s", CRLF);
+  //   _logic.lights.toggleMagnet();
+  //   _logic.magnet.open();
+  // else if (command == "v") {
+  //   print("adjusting volume..%s", CRLF);
+  //   _logic.audio.solved();
+  // else if (command == "b") {
+  //   print("toggling bowl...%s", CRLF);
+  //   _logic.lights.toggleBowl();
+  // else if (command == "d") {
+  //   print("toggling sensor debug...%s", CRLF);
+  //   _logic.stairSensors.debug();
+  // else if (command == "a") {
+  //   print("playing audio...%s", CRLF);
+  //   _logic.audio.levelUp();
+  // else if (command == "audiostop") {
+  //   print("stoping audio...%s", CRLF);
+  //   _logic.audio.stop();
+  // else if (command == "l") {
+  //   print("changing level...%s", CRLF);
+  //   _logic.incrementLevel();
+  // else if (command == "x") {
+  //   print("resetting to level 1...%s", CRLF);
+  //   _logic.lights.moveToLevel(1);
+

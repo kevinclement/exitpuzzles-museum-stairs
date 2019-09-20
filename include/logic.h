@@ -23,6 +23,7 @@ public:
   void incrementLevel();
   void changeLevel(int, bool);
   void solved();
+  void reboot(int);
 
 private:
 };
