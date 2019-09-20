@@ -10,8 +10,13 @@ void status(int) {
 }
 
 void incLevel(int) {
-  logic.serial.print("changing level...%s", CRLF);
+  logic.serial.print("changing level up...%s", CRLF);
   logic.incrementLevel();
+}
+
+void decLevel(int) {
+  logic.serial.print("changing level down...%s", CRLF);
+  logic.decrementLevel();
 }
 
 void resetLevel(int) {
@@ -43,10 +48,11 @@ void setup() {
 
   logic.serial.registerCommand(SerialCommand("status",     's', &status,     "status",     "gets the status of device"));
   logic.serial.registerCommand(SerialCommand("drop",       'y', &solved,     "drop",       "forces solved state and opens device"));
-  logic.serial.registerCommand(SerialCommand("level",      'l', &incLevel,   "level",      "moves the level up one"));
+  logic.serial.registerCommand(SerialCommand("up",         'u', &incLevel,   "up",         "moves the level up one"));
+  logic.serial.registerCommand(SerialCommand("down",       'd', &decLevel,   "down",       "moves the level down one"));
   logic.serial.registerCommand(SerialCommand("fail",       'f', &resetLevel, "fail",       "forces a fail and resets the level"));
-  logic.serial.registerCommand(SerialCommand("unsolvable", 'u', &unsolvable, "unsolvable", "toggle puzzle being unsolvable"));
-  logic.serial.registerCommand(SerialCommand("debug",      'd', &debug,      "debug",      "debug sensors"));
+  logic.serial.registerCommand(SerialCommand("unsolvable", 'n', &unsolvable, "unsolvable", "toggle puzzle being unsolvable"));
+  logic.serial.registerCommand(SerialCommand("debug",      'x', &debug,      "debug",      "debug sensors"));
   logic.serial.registerCommand(SerialCommand("reboot",     'r', &reboot,     "reboot",     "software reboot the device"));
 }
 

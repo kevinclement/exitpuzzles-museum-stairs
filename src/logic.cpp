@@ -100,6 +100,10 @@ void Logic::incrementLevel() {
   changeLevel(level + 1, false);
 }
 
+void Logic::decrementLevel() {
+  changeLevel(level - 1, false);
+}
+
 void Logic::resetLevel() {
   changeLevel(1, true);
 }
