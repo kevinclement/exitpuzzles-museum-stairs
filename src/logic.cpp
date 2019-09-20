@@ -112,33 +112,3 @@ void Logic::status() {
     audio.volume_whosh,
     CRLF);
 }
-
-// PREVIOUS COMMANDS ---------------------------
-// ---------------------------------------------
-
-  // else if (command == "m") {
-  //   print("toggling magnet...%s", CRLF);
-  //   _logic.lights.toggleMagnet();
-  //   _logic.magnet.open();
-  // else if (command == "v") {
-  //   print("adjusting volume..%s", CRLF);
-  //   _logic.audio.solved();
-  // else if (command == "b") {
-  //   print("toggling bowl...%s", CRLF);
-  //   _logic.lights.toggleBowl();
-  // else if (command == "d") {
-  //   print("toggling sensor debug...%s", CRLF);
-  //   _logic.stairSensors.debug();
-  // else if (command == "a") {
-  //   print("playing audio...%s", CRLF);
-  //   _logic.audio.levelUp();
-  // else if (command == "audiostop") {
-  //   print("stoping audio...%s", CRLF);
-  //   _logic.audio.stop();
-  // else if (command == "l") {
-  //   print("changing level...%s", CRLF);
-  //   _logic.incrementLevel();
-  // else if (command == "x") {
-  //   print("resetting to level 1...%s", CRLF);
-  //   _logic.lights.moveToLevel(1);
-
