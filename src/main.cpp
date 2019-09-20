@@ -51,20 +51,9 @@ void loop() {
 
 // PREVIOUS COMMANDS ---------------------------
 // ---------------------------------------------
-
-  // else if (command == "m") {
-  //   print("toggling magnet...%s", CRLF);
-  //   _logic.lights.toggleMagnet();
-  //   _logic.magnet.open();
-  // else if (command == "v") {
-  //   print("adjusting volume..%s", CRLF);
-  //   _logic.audio.solved();
-  // else if (command == "b") {
-  //   print("toggling bowl...%s", CRLF);
-  //   _logic.lights.toggleBowl();
-  // else if (command == "a") {
-  //   print("playing audio...%s", CRLF);
-  //   _logic.audio.levelUp();
-  // else if (command == "audiostop") {
-  //   print("stoping audio...%s", CRLF);
-  //   _logic.audio.stop();
+//  m => _logic.lights.toggleMagnet();
+//       _logic.magnet.open();
+//  v => _logic.audio.solved();
+//  b => _logic.lights.toggleBowl();
+//  a => _logic.audio.levelUp();
+//  x => _logic.audio.stop();
