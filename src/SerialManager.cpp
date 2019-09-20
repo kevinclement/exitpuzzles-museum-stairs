@@ -1,6 +1,6 @@
   #include "Arduino.h"
 #include "consts.h"
-#include "Logic.h"
+#include "logic.h"
 
 SerialManager::SerialManager(Logic &logic)
 : _logic(logic)
