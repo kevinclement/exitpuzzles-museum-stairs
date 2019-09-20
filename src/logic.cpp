@@ -54,9 +54,7 @@ void Logic::handle() {
 
   if (stairSensors.bad_value > STAIR_BAD_THRESH && level != 1) {
     Serial.printf("FAILED RESETTING - level is %d bad: %d\r\n", level, stairSensors.bad_value);
-    changeLevel(1, true);
-
-    status();
+    resetLevel();
   }
 
   if (stairSensors.sensor_values[level - 1] > STAIR_GOOD_THRESH) {
@@ -65,8 +63,6 @@ void Logic::handle() {
 
     if (level == 8) {
       solved();
-    } else {
-      status();
     }
   }
 }
@@ -79,11 +75,14 @@ void Logic::solved() {
 
   _solved_at = millis();
   audio.solved();
-  status();
 }
 
 void Logic::incrementLevel() {
   changeLevel(level + 1, false);
+}
+
+void Logic::resetLevel() {
+  changeLevel(1, true);
 }
 
 void Logic::changeLevel(int newLevel, bool failure) {
@@ -95,6 +94,8 @@ void Logic::changeLevel(int newLevel, bool failure) {
   } else {
     audio.stop();
   }
+
+  status();
 }
 
 void Logic::status() {

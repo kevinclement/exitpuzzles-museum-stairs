@@ -21,6 +21,7 @@ public:
   void handle();
   void status();
   void incrementLevel();
+  void resetLevel();
   void changeLevel(int, bool);
   void solved();
 
