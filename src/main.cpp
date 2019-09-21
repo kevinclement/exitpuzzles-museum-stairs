@@ -45,6 +45,7 @@ void debug(int) {
 
 void setup() {
   logic.setup();
+  logic.serial.print("Museum Stairs by kevinc...\n");
 
   logic.serial.registerCommand(SerialCommand("status",     's', &status,     "status",     "gets the status of device"));
   logic.serial.registerCommand(SerialCommand("drop",       'y', &solved,     "drop",       "forces solved state and opens device"));
@@ -54,6 +55,9 @@ void setup() {
   logic.serial.registerCommand(SerialCommand("unsolvable", 'n', &unsolvable, "unsolvable", "toggle puzzle being unsolvable"));
   logic.serial.registerCommand(SerialCommand("debug",      'x', &debug,      "debug",      "debug sensors"));
   logic.serial.registerCommand(SerialCommand("reboot",     'r', &reboot,     "reboot",     "software reboot the device"));
+
+  logic.serial.printHelp();
+  logic.status();
 }
 
 void loop() {

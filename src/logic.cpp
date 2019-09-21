@@ -22,15 +22,11 @@ Logic::Logic()
 void Logic::setup() {
   // empty name disables bluetooth otherwise sensors wont work
   serial.setup("");
-  serial.print("Museum Stairs by kevinc...\n");
 
   audio.setup();
   stairSensors.setup();
   lights.setup();
   magnet.setup();
-
-  serial.printHelp();
-  status();
 }
 
 void Logic::handle() {
