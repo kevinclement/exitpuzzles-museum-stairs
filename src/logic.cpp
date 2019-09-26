@@ -2,6 +2,7 @@
 #include "EEPROM.h"
 #include "logic.h"
 #include "consts.h"
+#include "version.h"
 
 #define STAIR_GOOD_THRESH 100
 #define STAIR_BAD_THRESH 400
@@ -125,19 +126,37 @@ void Logic::changeLevel(int newLevel, bool failure) {
 }
 
 void Logic::status() {
-  serial.print(
-    "status=level:%d,solved:%s,bowl:%s,magnet:%s,"
-    "magnetLight:%s,volumeLow:%d,volumeHigh:%d,volumeWhosh:%d,"
-    "unsolvable:%s"
-    "%s",
-    level,
-    _solved_at > 0 ? "true" : "false",
-    lights.bowlOn ? "true" : "false",
-    magnet.high ? "true" : "false",
-    lights.magnetLightOn ? "true" : "false",
-    audio.volume_low,
-    audio.volume_high,
-    audio.volume_whosh,
-    _unsolvable ? "true" : "false",
-    CRLF);
+  char cMsg[254];
+  sprintf(cMsg, 
+    "status="
+      "version:%s,"
+      "gitDate:%s,"
+      "buildDate:%s,"
+      
+      "solved:%s,"
+      "bowl:%s,"
+      "magnet:%s,"
+      "magnetLight:%s,"
+      "volumeLow:%d,"
+      "volumeHigh:%d,"
+      "volumeWhosh:%d,"
+      "unsolvable:%s,"
+
+      "%s"
+    , GIT_HASH,
+      GIT_DATE,
+      DATE_NOW,
+
+      _solved_at > 0 ? "true" : "false",
+      lights.bowlOn ? "true" : "false",
+      magnet.high ? "true" : "false",
+      lights.magnetLightOn ? "true" : "false",
+      audio.volume_low,
+      audio.volume_high,
+      audio.volume_whosh,
+      _unsolvable ? "true" : "false",
+
+      CRLF);
+
+  serial.print(cMsg);
 }
