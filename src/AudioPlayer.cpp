@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "AudioPlayer.h"
+#include "logic.h"
 HardwareSerial mySerial(1);
 
 #define WHOSH_TRACK 1
@@ -99,20 +100,20 @@ void AudioPlayer::handle() {
   // whosh finished playing
   if (whoosh_playing_at > 0 && millis() - whoosh_playing_at > WHOSH_TRACK_LENGTH - 1000) {
       if (_solved) {
-        Serial.println("audio: levelup played.  playing solved track.");
+        _logic.serial.print("audio: levelup played.  playing solved track.\r\n");
         solved_playing_at = millis();
         whoosh_playing_at = 0;
         sendCommand(0x22, volume_whosh, SOLVED_TRACK);
       }
       else if (millis() - whoosh_playing_at > WHOSH_TRACK_LENGTH) {
-        Serial.println("audio: levelup played not solved.  restarting idle.");
+        _logic.serial.print("audio: levelup played not solved.  restarting idle.\r\n");
         whoosh_playing_at = 0;
         idle();
       }
   }
   else if (solved_playing_at > 0 && millis() - solved_playing_at > SOLVED_TRACK_LENGTH) {
     solved_playing_at = 0;
-    Serial.println("audio: levelup played.  restarting idle.");
+    _logic.serial.print("audio: levelup played.  restarting idle.\r\n");
     idle();
   }
   else if (idle_playing_at > 0 && millis() - idle_playing_at > IDLE_TRACK_LENGTH) {

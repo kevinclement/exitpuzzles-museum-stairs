@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "StairSensors.h"
+#include "logic.h"
 
 int sensor_pins[NUM_SENSORS] = { A11, A5, A4, A3, A2, A1, A0 };
 int bad_pin = A10;
@@ -18,9 +19,9 @@ void StairSensors::debug() {
 
 void StairSensors::printSensors() {
   for (int i=0; i < 7; i++) {
-    Serial.printf("%d: %4d ", i+1, sensor_values[i]);
+    _logic.serial.print("%d: %4d ", i+1, sensor_values[i]);
   }
-  Serial.printf("BAD: %4d\r\n", bad_value);
+  _logic.serial.print("BAD: %4d\r\n", bad_value);
 }
 
 void StairSensors::handle() {

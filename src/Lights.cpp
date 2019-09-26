@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "Lights.h"
+#include "logic.h"
 #include <FastLED.h>
 
 #define CHIPSET       WS2812B
@@ -50,7 +51,7 @@ void Lights::moveToLevel(int level) {
 
     // means we went down, need to reset
     if (_level > 0 && level < _level) {
-      Serial.println("lights: level went down, resetting");
+      _logic.serial.print("lights: level went down, resetting\r\n");
       _fade = true;
     } else {
       _fade = false;

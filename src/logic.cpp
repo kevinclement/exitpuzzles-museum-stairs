@@ -41,7 +41,7 @@ void Logic::handle() {
     static bool _solvedRan = false;
 
     if (!_solvedRan && millis() - _solved_at > MAGNET_SOLVED_WAIT_TIME) {
-      Serial.println("logic: solved wait time elapsed.  dropping magnet.");
+      serial.print("logic: solved wait time elapsed.  dropping magnet.\r\n");
       magnet.open();
       lights.changeMagnet(true);
       _solvedRan = true;
@@ -60,7 +60,7 @@ void Logic::handle() {
   }
 
   if (stairSensors.sensor_values[level - 1] > STAIR_GOOD_THRESH) {
-    Serial.printf("sensor thresh l:%d v:%d\r\n", level, stairSensors.sensor_values[level - 1]);
+    serial.print("sensor thresh l:%d v:%d\r\n", level, stairSensors.sensor_values[level - 1]);
     inc = true;
   }
 
@@ -71,7 +71,7 @@ void Logic::handle() {
   }
 
   if (inc) {
-    Serial.printf("Passed level %d\r\n", level);
+    serial.print("Passed level %d\r\n", level);
     incrementLevel();
 
     if (_unsolvable && level == 7) {
@@ -80,13 +80,13 @@ void Logic::handle() {
       solved();
     }
   } else if (reset) {
-    Serial.printf("FAILED RESETTING - level is %d bad: %d\r\n", level, stairSensors.bad_value);
+    serial.print("FAILED RESETTING - level is %d bad: %d\r\n", level, stairSensors.bad_value);
     resetLevel();
   }
 }
 
 void Logic::solved() {
-  Serial.println("SOLVED!");
+  serial.print("SOLVED!\r\n");
 
   // change level to 8, in case this is a forced solved, otherwise its a noop
   changeLevel(8, false);
