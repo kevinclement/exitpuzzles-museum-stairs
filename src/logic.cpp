@@ -140,7 +140,7 @@ void Logic::status() {
       "volumeLow:%d,"
       "volumeHigh:%d,"
       "volumeWhosh:%d,"
-      "unsolvable:%s,"
+      "unsolvable:%s"
 
       "%s"
     , GIT_HASH,
