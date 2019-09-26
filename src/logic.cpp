@@ -133,6 +133,7 @@ void Logic::status() {
       "gitDate:%s,"
       "buildDate:%s,"
       
+      "level:%d,"
       "solved:%s,"
       "bowl:%s,"
       "magnet:%s,"
@@ -147,6 +148,7 @@ void Logic::status() {
       GIT_DATE,
       DATE_NOW,
 
+      level,
       _solved_at > 0 ? "true" : "false",
       lights.bowlOn ? "true" : "false",
       magnet.high ? "true" : "false",
