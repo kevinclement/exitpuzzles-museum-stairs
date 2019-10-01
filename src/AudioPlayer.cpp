@@ -13,11 +13,9 @@ HardwareSerial mySerial(1);
 void sendCommand(byte command);
 void sendCommand(byte command, byte dat2);
 void sendCommand(byte command, byte dat1, byte dat2);
-void play(byte track);
 
 unsigned long whoosh_playing_at = 0;
 unsigned long solved_playing_at = 0;
-unsigned long idle_playing_at = 0;
 
 AudioPlayer::AudioPlayer(Logic &logic)
 : _logic(logic)
@@ -64,20 +62,21 @@ void sendCommand(byte command, byte dat1, byte dat2)
   }
 }
 
-void play(byte track) {
-  sendCommand(0X08, track);
-}
-
 void AudioPlayer::idle() {
-  sendCommand(0x22, _solved ? volume_low : volume_high, IDLE_TRACK);
-  idle_playing_at = millis();
+
+  // set volume
+  sendCommand(0x06, _solved ? volume_low : volume_high);
+  delay(20);
+
+  // play on repeat
+  sendCommand(0X08, IDLE_TRACK);
+
   whoosh_playing_at = 0;
   solved_playing_at = 0;
 }
 
 void AudioPlayer::levelUp() {
   whoosh_playing_at = millis();
-  idle_playing_at = 0;
   solved_playing_at = 0;
 
   // play at whosh volume once
@@ -88,7 +87,6 @@ void AudioPlayer::stop() {
   sendCommand(0x16, 0x00);
   whoosh_playing_at = 0;
   solved_playing_at = 0;
-  idle_playing_at = 0;
 }
 
 void AudioPlayer::solved() {
@@ -114,10 +112,6 @@ void AudioPlayer::handle() {
   else if (solved_playing_at > 0 && millis() - solved_playing_at > SOLVED_TRACK_LENGTH) {
     solved_playing_at = 0;
     _logic.serial.print("audio: levelup played.  restarting idle.\r\n");
-    idle();
-  }
-  else if (idle_playing_at > 0 && millis() - idle_playing_at > IDLE_TRACK_LENGTH) {
-    idle_playing_at = 0;
     idle();
   }
 }
