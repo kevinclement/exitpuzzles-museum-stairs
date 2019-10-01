@@ -10,9 +10,9 @@ class AudioPlayer {
     void setup();
     void handle();
 
-    byte volume_low = 0x16;
-    byte volume_high = 0x1C;
-    byte volume_whosh = 0x1E;
+    byte volume_low = 0x2A;
+    byte volume_high = 0x30;
+    byte volume_whosh = 0x32;
 
     void idle();
     void levelUp();
