@@ -10,6 +10,7 @@
 
 unsigned long _solved_at = 0;
 bool _unsolvable = false;
+bool _sensors_disabled = false;
 
 Logic::Logic() 
   : serial(),
@@ -55,13 +56,16 @@ void Logic::handle() {
   bool inc = false;
   bool reset = false;
 
-  if (stairSensors.bad_value > STAIR_BAD_THRESH && level != 1) {
-    reset = true;
-  }
+  // only react to sensors if they aren't disabled
+  if (!_sensors_disabled) {
+    if (stairSensors.bad_value > STAIR_BAD_THRESH && level != 1) {
+      reset = true;
+    }
 
-  if (stairSensors.sensor_values[level - 1] > STAIR_GOOD_THRESH) {
-    serial.print("sensor thresh l:%d v:%d\r\n", level, stairSensors.sensor_values[level - 1]);
-    inc = true;
+    if (stairSensors.sensor_values[level - 1] > STAIR_GOOD_THRESH) {
+      serial.print("sensor thresh l:%d v:%d\r\n", level, stairSensors.sensor_values[level - 1]);
+      inc = true;
+    }
   }
 
   // if its unsolvable, than randomize increments above level 1
@@ -112,6 +116,11 @@ void Logic::unsolvable() {
   status();
 }
 
+void Logic::sensorsDisabled() {
+  _sensors_disabled = !_sensors_disabled;
+  status();
+}
+
 void Logic::changeLevel(int newLevel, bool failure) {
   level = newLevel;
   lights.moveToLevel(level);
@@ -141,7 +150,8 @@ void Logic::status() {
       "volumeLow:%d,"
       "volumeHigh:%d,"
       "volumeWhosh:%d,"
-      "unsolvable:%s"
+      "unsolvable:%s,"
+      "sensorsDisabled:%s,"
 
       "%s"
     , GIT_HASH,
@@ -157,6 +167,7 @@ void Logic::status() {
       audio.volume_high,
       audio.volume_whosh,
       _unsolvable ? "true" : "false",
+      _sensors_disabled ? "true" : "false",
 
       CRLF);
 

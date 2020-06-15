@@ -24,6 +24,7 @@ public:
   void decrementLevel();
   void resetLevel();
   void unsolvable();
+  void sensorsDisabled();
   void changeLevel(int, bool);
   void solved();
 
