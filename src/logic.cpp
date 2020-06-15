@@ -10,7 +10,9 @@
 
 unsigned long _solved_at = 0;
 bool _unsolvable = false;
-bool _sensors_disabled = false;
+
+// TODO: change back to false once hardware is fixed
+bool _sensors_disabled = true;
 
 Logic::Logic() 
   : serial(),
