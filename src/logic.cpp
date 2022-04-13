@@ -128,7 +128,8 @@ void Logic::changeLevel(int newLevel, bool failure) {
   if (!failure) {
     audio.levelUp();
   } else {
-    audio.stop();
+    // audio.stop();
+    audio.failure();
   }
 
   status();

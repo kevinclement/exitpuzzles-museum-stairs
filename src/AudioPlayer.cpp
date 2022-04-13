@@ -6,6 +6,7 @@ HardwareSerial mySerial(1);
 #define WHOSH_TRACK 1
 #define IDLE_TRACK 3
 #define SOLVED_TRACK 2
+#define FAILURE_TRACK 6
 #define WHOSH_TRACK_LENGTH 2700
 #define SOLVED_TRACK_LENGTH 10000
 #define IDLE_TRACK_LENGTH 5400
@@ -81,6 +82,13 @@ void AudioPlayer::levelUp() {
 
   // play at whosh volume once
   sendCommand(0x22, volume_whosh, WHOSH_TRACK);
+}
+
+void AudioPlayer::failure() {
+  stop();
+  
+  // play at low volume once
+  sendCommand(0x22, 0x14, FAILURE_TRACK);
 }
 
 void AudioPlayer::stop() {

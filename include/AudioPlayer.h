@@ -16,6 +16,7 @@ class AudioPlayer {
 
     void idle();
     void levelUp();
+    void failure();
     void stop();
     void solved();
 
