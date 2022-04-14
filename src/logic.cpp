@@ -5,7 +5,7 @@
 #include "version.h"
 
 #define STAIR_GOOD_THRESH 100
-#define STAIR_BAD_THRESH 400
+#define STAIR_BAD_THRESH 1100
 #define MAGNET_SOLVED_WAIT_TIME 2800
 
 unsigned long _solved_at = 0;
