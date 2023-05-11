@@ -2,6 +2,19 @@
 #include "consts.h"
 #include "logic.h"
 
+// SOLUTION:
+//   R -> L -> L -> R -> SKIP -> R -> R -> SKIP -> L
+//   ------------
+//   1: R (m)
+//   2: L (tail)
+//   3: L (pi)
+//   4: R (v)
+//   5: SKIP 
+//   6: R (h)
+//   7: R (arrow)
+//   8: SKIP
+//   9: L (omega)
+
 // Globals
 Logic logic;
 
